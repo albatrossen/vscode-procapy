@@ -8,62 +8,88 @@
 		"url": "https://github.com/thomasthorsen/vscode-procapy"
 	},
 	"icon": "icon.png",
-	"version": "1.1.1",
+	"version": "2.0.2",
 	"engines": {
 		"vscode": "^1.35.0"
 	},
 	"categories": [
 		"Other"
 	],
-	"activationEvents": [
-		"onCommand:procapy.calculate.decimal",
-		"onCommand:procapy.calculate.hex",
-		"onCommand:procapy.calculate.binary",
-		"onCommand:procapy.calculate.octal"
-	],
 	"main": "./out/extension.js",
 	"contributes": {
+		"configuration": {
+			"type": "object",
+			"title": "Procapy",
+			"properties": {
+				"procapy.startupCode": {
+					"type": "string",
+					"editPresentation": "multilineText",
+					"default": "from math import *\nimport cmath\nimport datetime\n\ndef bs(v, idx):\n    return bool(v & (1 << idx))",
+					"description": "Multiline Python code executed when the Procapy kernel starts.",
+					"scope": "window"
+				}
+			}
+		},
 		"keybindings": [
 			{
-				"command": "procapy.calculate.decimal",
+				"command": "procapy.calculate",
+				"key": "alt+oem_5",
+				"when": "editorTextFocus"
+			},
+			{
+				"command": "procapy.calculate",
+				"key": "alt+oem_8",
+				"when": "editorTextFocus"
+			},
+			{
+				"command": "procapy.calculate",
 				"key": "alt+enter",
 				"when": "editorTextFocus && !findWidgetVisible"
 			},
 			{
-				"command": "procapy.calculate.hex",
-				"key": "ctrl+alt+enter",
-				"when": "editorTextFocus && !findWidgetVisible"
+				"key": "alt+`",
+				"command": "procapy.calculate",
+				"when": "!hasSpeechProvider"
 			},
 			{
-				"command": "procapy.calculate.binary",
-				"key": "shift+alt+enter",
-				"when": "editorTextFocus && !findWidgetVisible"
+					"command": "procapy.calculate",
+					"key": "ctrl+alt+enter",
+					"when": "editorTextFocus && !findWidgetVisible",
+					"args": {
+						"conversion": "Hex Group"
+					}
 			},
 			{
-				"command": "procapy.calculate.octal",
-				"key": "ctrl+shift+alt+enter",
-				"when": "editorTextFocus && !findWidgetVisible"
+					"command": "procapy.calculate",
+					"key": "shift+alt+enter",
+					"when": "editorTextFocus && !findWidgetVisible",
+					"args": {
+						"conversion": "Binary Group"
+					}
+			},
+			{
+					"command": "procapy.calculate",
+					"key": "ctrl+shift+alt+enter",
+					"when": "editorTextFocus && !findWidgetVisible",
+					"args": {
+						"conversion": "Oct"
+					}
 			}
 		],
 		"commands": [
 			{
-				"command": "procapy.calculate.decimal",
+				"command": "procapy.calculate",
 				"title": "Calculate decimal",
 				"category": "Procapy"
 			},
 			{
-				"command": "procapy.calculate.hex",
-				"title": "Calculate hex",
+				"command": "procapy.capture",
+				"title": "Capture current selections or file as a variable",
 				"category": "Procapy"
 			},
 			{
-				"command": "procapy.calculate.binary",
-				"title": "Calculate binary",
-				"category": "Procapy"
-			},
-			{
-				"command": "procapy.calculate.octal",
-				"title": "Calculate octal",
+				"command": "procapy.stop",
+				"title": "Stop Running Kernel",
 				"category": "Procapy"
 			}
 		]
@@ -72,14 +98,13 @@
 		"vscode:prepublish": "npm run compile",
 		"compile": "tsc -p ./",
 		"watch": "tsc -watch -p ./",
-		"postinstall": "node ./node_modules/vscode/bin/install",
-		"test": "npm run compile && node ./node_modules/vscode/bin/test"
+		"postinstall": "node ./node_modules/vscode/bin/install"
 	},
 	"devDependencies": {
-		"typescript": "^3.3.1",
-		"vscode": "^1.1.28",
+		"@types/mocha": "^2.2.42",
+		"@types/node": "^10.17.60",
 		"tslint": "^5.12.1",
-		"@types/node": "^10.12.21",
-		"@types/mocha": "^2.2.42"
+		"typescript": "^3.3.1",
+		"vscode": "^1.1.28"
 	}
 }
